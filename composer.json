@@ -1,33 +1,37 @@
 {
-	"name": "dogsports/flarum-ext-pipetables",
-	"description": "Active markdown tables.",
-	"type": "flarum-extension",
-	"keywords": ["flarum","dogsports","markdown","table","typography"],
-	"author": {
-		"name": "Kevin PAULMIER"
-	},
-	"license": "MIT",
-	"require": {
-		"flarum/core": ">=0.1.0-beta.7",
-		"s9e/text-formatter": "*"
-	},
-	"support": {
-		"source": "https://github.com/dogsports/flarum-ext-pipetables",
-		"issues": "https://github.com/dogsports/flarum-ext-pipetables/issues"
-	},
-	"autoload": {
-		"psr-4": {
-			"DogSports\\PipeTables\\": "src/"
-		}
-	},
-	"extra": {
-		"flarum-extension": {
-			"title": "Markdown Tables",
-			"icon": {
-				"name": "table",
-				"backgroundColor": "#4687a7",
-				"color": "#fff"
-			}
-		}
-	}
+  "name": "kvothe/pipetables",
+  "description": "Active markdown tables.",
+  "keywords": [
+    "flarum"
+  ],
+  "type": "flarum-extension",
+  "license": "MIT",
+  "require": {
+    "flarum/core": "^0.1.0-beta.8"
+  },
+  "authors": [
+    {
+      "name": "Kvothe",
+      "email": "",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Kvothe\\PipeTables\\": "src/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Markdown Tables",
+      "icon": {
+        "name": "Tables",
+        "backgroundColor": "#000099",
+        "color": "#ffffff"
+      }
+    },
+    "flagrow": {
+      "discuss": ""
+    }
+  }
 }
