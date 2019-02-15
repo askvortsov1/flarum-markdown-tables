@@ -25,3 +25,4 @@ php flarum cache:clear
 ### Links
 
 - [Packagist](https://packagist.org/packages/kvothe/pipetables)
+- [GitHub](https://github.com/oaklinq/flarum-ext-pipetables)
