@@ -1,27 +1,27 @@
 <?php
 
 /*
- * This file is part of kvothe/pipetables.
+ * This file is part of askvortsov/pipetables.
  *
  * Copyright (c) 2019 
  * Extension by DogSports
- * Updated by Kvothe.
+ * Updated by Askvortsov.
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Kvothe\PipeTables;
+namespace Askvortsov\PipeTables;
 
 use Flarum\Extend;
 use s9e\TextFormatter\Configurator;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
     (new Extend\Formatter)
-	    ->configure(function (Configurator $config) {
-	        $config->PipeTables;
-    })
+        ->configure(function (Configurator $config) {
+            $config->PipeTables;
+        })
 ];

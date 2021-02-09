@@ -2,8 +2,8 @@ import app from 'flarum/app';
 import { extend } from 'flarum/extend'
 import Post from 'flarum/components/Post'
 
-app.initializers.add('kvothe-pipetables', () => {
-	extend(Post.prototype, 'config', function (isInitialized) {
+app.initializers.add('askvortsov-pipetables', () => {
+	extend(Post.prototype, 'oncreate', function () {
 		function addDataLabelsToTable(table) {
 			let labels = [];
 			for (let th of table.getElementsByTagName('th')) {
