@@ -2,6 +2,8 @@ askvortsov-pipetables:
   forum:
     composer:
       table_menu:
+        num_cols: "# Columns"
+        num_rows: "# Rows (including header)"
         column: Column
         remove_column: Remove column
         insert_column_before: Insert column before

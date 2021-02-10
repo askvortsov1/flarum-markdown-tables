@@ -374,58 +374,63 @@ function removeTableCommand(
     return true;
 }
 
-export function insertTableCommand(state, dispatch) {
-    // TODO: Clean this up
-    const schema = state.schema;
+export function insertTableCommand(numRows = 4, numCols = 3) {
+    return (state, dispatch) => {
+        // TODO: Clean this up
+        const schema = state.schema;
 
-    // TODO: Reenable this
-    // if (!setBlockType(schema.nodes.table)(state)) {
-    //     return false;
-    // }
+        // TODO: Reenable this
+        // if (!setBlockType(schema.nodes.table)(state)) {
+        //     return false;
+        // }
 
-    if (!dispatch) return true;
+        if (!dispatch) return true;
 
-    let headerIndex = 1;
-    let cellIndex = 1;
-    const cell = () =>
-        schema.nodes.table_cell.create(
-            null,
-            schema.text(`cell ${cellIndex++}`)
+        let headerIndex = 1;
+        let cellIndex = 1;
+        const cell = () =>
+            schema.nodes.table_cell.create(
+                null,
+                schema.text(`cell ${cellIndex++}`)
+            );
+        const header = () =>
+            schema.nodes.table_header.create(
+                null,
+                schema.text(`header ${headerIndex++}`)
+            );
+        const row = (...cells) =>
+            schema.nodes.table_row.create(null, cells);
+        const head = (row) =>
+            schema.nodes.table_head.create(null, row);
+        const body = (...rows) =>
+            schema.nodes.table_body.create(null, rows);
+        const table = (head, body) =>
+            schema.nodes.table.createChecked(null, [head, body]);
+        const paragraph = () => schema.nodes.paragraph.create(null);
+
+        // !MODIFIED
+        const t = table(
+            head(row(...Array(numCols).fill(0).map(header))),
+            body(
+                ...Array(numRows - 1).fill(0).map(_ => {
+                    return row(...Array(numCols).fill(0).map(cell))
+                })
+            )
         );
-    const header = () =>
-        schema.nodes.table_header.create(
-            null,
-            schema.text(`header ${headerIndex++}`)
-        );
-    const row = (...cells) =>
-        schema.nodes.table_row.create(null, cells);
-    const head = (row) =>
-        schema.nodes.table_head.create(null, row);
-    const body = (...rows) =>
-        schema.nodes.table_body.create(null, rows);
-    const table = (head, body) =>
-        schema.nodes.table.createChecked(null, [head, body]);
-    const paragraph = () => schema.nodes.paragraph.create(null);
+        // !MODIFIED
 
-    const t = table(
-        head(row(header(), header(), header())),
-        body(
-            row(cell(), cell(), cell()),
-            row(cell(), cell(), cell()),
-            row(cell(), cell(), cell())
-        )
-    );
-    let tr = state.tr.replaceSelectionWith(t);
-    dispatch(tr.scrollIntoView());
-
-    // if there's no selectable node after the inserted table, insert an empty paragraph
-    // because it makes selecting, navigating much more intuitive
-    const newState = state.apply(tr);
-    const nodeAfterTable = newState.doc.nodeAt(newState.tr.selection.to - 1);
-    if (nodeAfterTable && nodeAfterTable.type === schema.nodes.text) {
-        tr = newState.tr.insert(newState.tr.selection.to, paragraph());
+        let tr = state.tr.replaceSelectionWith(t);
         dispatch(tr.scrollIntoView());
-    }
 
-    return true;
+        // if there's no selectable node after the inserted table, insert an empty paragraph
+        // because it makes selecting, navigating much more intuitive
+        const newState = state.apply(tr);
+        const nodeAfterTable = newState.doc.nodeAt(newState.tr.selection.to - 1);
+        if (nodeAfterTable && nodeAfterTable.type === schema.nodes.text) {
+            tr = newState.tr.insert(newState.tr.selection.to, paragraph());
+            dispatch(tr.scrollIntoView());
+        }
+
+        return true;
+    }
 }

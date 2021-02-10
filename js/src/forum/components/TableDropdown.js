@@ -1,10 +1,12 @@
 import Button from 'flarum/common/components/Button';
-import Dropdown from 'flarum/common/components/Dropdown';
-import icon from 'flarum/common/helpers/icon';
 import listItems from 'flarum/common/helpers/listItems';
+import extractText from 'flarum/common/utils/extractText';
+import Stream from 'flarum/common/utils/Stream';
 import { insertTableColumnAfterCommand, insertTableColumnBeforeCommand, insertTableCommand, insertTableRowBeforeCommand, insertTableRowAfterCommand, inTable, removeColumnCommand, removeRowCommand } from '../proseMirror/commands';
 
-export default class TableDropdown extends Dropdown {
+const FormDropdown = require('@askvortsov-rich-text').components.FormDropdown;
+
+export default class TableDropdown extends FormDropdown {
   oninit(vnode) {
     super.oninit(vnode);
 
@@ -16,26 +18,16 @@ export default class TableDropdown extends Dropdown {
       },
       this.onEditorUpdate.bind(this)
     );
-  }
 
-  oncreate(vnode) {
-    super.oncreate(vnode);
-
-    this.$('[data-toggle="tooltip"]').tooltip();
-    this.$().on('click', this.onclick.bind(this));
-  }
-
-  getButton(children) {
-    return (
-      <button className="Dropdown-toggle Button Button--icon Button--link Button--menuDropdown" data-toggle="dropdown">
-        <span data-toggle="tooltip" title={this.attrs.tooltip}>
-          {icon(this.attrs.icon)}
-        </span>
-      </button>
-    );
+    this.numCols = Stream(3);
+    this.numRows = Stream(4);
   }
 
   getMenu(items) {
+    if (!this.inTable()) {
+      return super.getMenu(items);
+    }
+
     const commands = [
       {
         translation: 'remove_column',
@@ -74,17 +66,47 @@ export default class TableDropdown extends Dropdown {
     );
   }
 
-  inTable() {
-    return inTable(this.attrs.state.editorView.state);
+  fields() {
+    const items = super.fields();
+
+    items.add(
+      'numCols',
+      <div className="Form-group">
+        <label>{app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_cols')}</label>
+        <input
+          className="FormControl"
+          name="numCols"
+          type="number"
+          placeholder={extractText(app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_cols'))}
+          bidi={this.numCols}
+          required
+        />
+      </div>,
+      10
+    );
+
+    items.add(
+      'numRows',
+      <div className="Form-group">
+        <label>{app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_rows')}</label>
+        <input
+          className="FormControl"
+          name="numRows"
+          type="number"
+          placeholder={extractText(app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_rows'))}
+          bidi={this.numRows}
+          required
+        />
+      </div>,
+      10
+    );
+
+
+    return items;
   }
 
-  onclick(e) {
-    if (!this.inTable()) {
-      this.command = insertTableCommand;
-      this.state.run(this.attrs.type);
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  inTable() {
+    return inTable(this.attrs.state.editorView.state);
   }
 
   onEditorUpdate() {
@@ -101,5 +123,12 @@ export default class TableDropdown extends Dropdown {
     e.preventDefault();
     this.command = command;
     return this.state.run(this.attrs.type);
+  }
+
+  insert() {
+    if (!this.inTable()) {
+      this.command = insertTableCommand(parseInt(this.numRows()), parseInt(this.numCols()));
+      this.state.run(this.attrs.type);
+    }
   }
 }
