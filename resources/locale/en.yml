@@ -4,6 +4,7 @@ askvortsov-pipetables:
       table_menu:
         num_cols: "# Columns"
         num_rows: "# Rows (including header)"
+        label_cells: "# Label cells?"
         column: Column
         remove_column: Remove column
         insert_column_before: Insert column before

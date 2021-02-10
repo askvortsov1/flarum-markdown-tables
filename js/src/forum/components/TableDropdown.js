@@ -1,4 +1,5 @@
 import Button from 'flarum/common/components/Button';
+import Switch from 'flarum/common/components/Switch';
 import listItems from 'flarum/common/helpers/listItems';
 import extractText from 'flarum/common/utils/extractText';
 import Stream from 'flarum/common/utils/Stream';
@@ -21,6 +22,7 @@ export default class TableDropdown extends FormDropdown {
 
     this.numCols = Stream(3);
     this.numRows = Stream(4);
+    this.labelCells = Stream(true);
   }
 
   getMenu(items) {
@@ -101,6 +103,18 @@ export default class TableDropdown extends FormDropdown {
       10
     );
 
+    items.add(
+      'labelCells',
+
+      <div className="Form-group">
+        {Switch.component({
+          state: this.labelCells(),
+          onchange: this.labelCells
+        }, app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.label_cells'))}
+      </div>,
+      9
+    )
+
 
     return items;
   }
@@ -127,7 +141,7 @@ export default class TableDropdown extends FormDropdown {
 
   insert() {
     if (!this.inTable()) {
-      this.command = insertTableCommand(parseInt(this.numRows()), parseInt(this.numCols()));
+      this.command = insertTableCommand(parseInt(this.numRows()), parseInt(this.numCols()), this.labelCells());
       this.state.run(this.attrs.type);
     }
   }

@@ -374,7 +374,7 @@ function removeTableCommand(
     return true;
 }
 
-export function insertTableCommand(numRows = 4, numCols = 3) {
+export function insertTableCommand(numRows = 4, numCols = 3, labelCells = true) {
     return (state, dispatch) => {
         // TODO: Clean this up
         const schema = state.schema;
@@ -391,12 +391,12 @@ export function insertTableCommand(numRows = 4, numCols = 3) {
         const cell = () =>
             schema.nodes.table_cell.create(
                 null,
-                schema.text(`cell ${cellIndex++}`)
+                schema.text(labelCells ? `cell ${cellIndex++}` : ' ')
             );
         const header = () =>
             schema.nodes.table_header.create(
                 null,
-                schema.text(`header ${headerIndex++}`)
+                schema.text(labelCells ?`header ${headerIndex++}`: ' ')
             );
         const row = (...cells) =>
             schema.nodes.table_row.create(null, cells);
