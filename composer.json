@@ -22,15 +22,12 @@
   },
   "extra": {
     "flarum-extension": {
-      "title": "Markdown Tables",
+      "title": "Markdown fas fa-table",
       "icon": {
         "name": "Tables",
-        "backgroundColor": "#000099",
+        "backgroundColor": "#6932D1",
         "color": "#ffffff"
       }
-    },
-    "flagrow": {
-      "discuss": ""
     }
   }
 }
