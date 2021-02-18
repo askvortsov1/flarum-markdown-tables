@@ -5,7 +5,8 @@ import extractText from 'flarum/common/utils/extractText';
 import Stream from 'flarum/common/utils/Stream';
 import { insertTableColumnAfterCommand, insertTableColumnBeforeCommand, insertTableCommand, insertTableRowBeforeCommand, insertTableRowAfterCommand, inTable, removeColumnCommand, removeRowCommand } from '../proseMirror/commands';
 
-const FormDropdown = require('@askvortsov-rich-text').components.FormDropdown;
+// TODO: is there a cleaner way to do this?
+const FormDropdown = "askvortsov-rich-text" in flarum.extensions ? require('@askvortsov-rich-text').components.FormDropdown : Object;
 
 export default class TableDropdown extends FormDropdown {
   oninit(vnode) {

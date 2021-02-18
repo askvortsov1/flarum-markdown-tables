@@ -4,6 +4,8 @@ import { tableKeymap } from './proseMirror/tableKeymap';
 import { tableBodyNodeSpec, tableCellNodeSpec, tableHeaderNodeSpec, tableHeadNodeSpec, tableNodeSpec, tableRowNodeSpec } from './proseMirror/tableSchema';
 
 export default function configureRichText() {
+    if (!("askvortsov-rich-text" in flarum.extensions)) return;
+
     const ProseMirrorMenu = require('@askvortsov-rich-text').components.ProseMirrorMenu;
 
     extend(ProseMirrorMenu.prototype, 'items', function (items) {
