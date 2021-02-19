@@ -8,8 +8,10 @@ export default function configureRichText() {
 
     const ProseMirrorMenu = require('@askvortsov-rich-text').components.ProseMirrorMenu;
 
+    const TableDropdownComponent = TableDropdown();
+
     extend(ProseMirrorMenu.prototype, 'items', function (items) {
-        items.add('table', TableDropdown.component({
+        items.add('table', TableDropdownComponent.component({
             type: 'table',
             icon: 'fas fa-table',
             tooltip: app.translator.trans('askvortsov-pipetables.forum.composer.table_tooltip'),
