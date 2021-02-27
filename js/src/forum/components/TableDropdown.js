@@ -3,7 +3,16 @@ import Switch from 'flarum/common/components/Switch';
 import listItems from 'flarum/common/helpers/listItems';
 import extractText from 'flarum/common/utils/extractText';
 import Stream from 'flarum/common/utils/Stream';
-import { insertTableColumnAfterCommand, insertTableColumnBeforeCommand, insertTableCommand, insertTableRowBeforeCommand, insertTableRowAfterCommand, inTable, removeColumnCommand, removeRowCommand } from '../proseMirror/commands';
+import {
+  insertTableColumnAfterCommand,
+  insertTableColumnBeforeCommand,
+  insertTableCommand,
+  insertTableRowBeforeCommand,
+  insertTableRowAfterCommand,
+  inTable,
+  removeColumnCommand,
+  removeRowCommand,
+} from '../proseMirror/commands';
 
 export default function TableDropdown() {
   const FormDropdown = require('@askvortsov-rich-text').components.FormDropdown;
@@ -33,37 +42,39 @@ export default function TableDropdown() {
       const commands = [
         {
           translation: 'remove_column',
-          command: removeColumnCommand
+          command: removeColumnCommand,
         },
         {
           translation: 'insert_column_before',
-          command: insertTableColumnBeforeCommand
+          command: insertTableColumnBeforeCommand,
         },
         {
           translation: 'insert_column_after',
-          command: insertTableColumnAfterCommand
+          command: insertTableColumnAfterCommand,
         },
         {
           translation: 'remove_row',
-          command: removeRowCommand
+          command: removeRowCommand,
         },
         {
           translation: 'insert_row_before',
-          command: insertTableRowBeforeCommand
+          command: insertTableRowBeforeCommand,
         },
         {
           translation: 'insert_row_after',
-          command: insertTableRowAfterCommand
+          command: insertTableRowAfterCommand,
         },
       ];
 
       return (
         <ul className={'Dropdown-menu dropdown-menu TableDropdownMenu'}>
-          {listItems(commands.map(command => <Button
-            onclick={this.click.bind(this, command.command)}
-            onkeydown={this.keydown.bind(this, command.command)}>
-            {app.translator.trans(`askvortsov-pipetables.forum.composer.table_menu.${command.translation}`)}
-          </Button>))}
+          {listItems(
+            commands.map((command) => (
+              <Button onclick={this.click.bind(this, command.command)} onkeydown={this.keydown.bind(this, command.command)}>
+                {app.translator.trans(`askvortsov-pipetables.forum.composer.table_menu.${command.translation}`)}
+              </Button>
+            ))
+          )}
         </ul>
       );
     }
@@ -107,14 +118,16 @@ export default function TableDropdown() {
         'labelCells',
 
         <div className="Form-group">
-          {Switch.component({
-            state: this.labelCells(),
-            onchange: this.labelCells
-          }, app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.label_cells'))}
+          {Switch.component(
+            {
+              state: this.labelCells(),
+              onchange: this.labelCells,
+            },
+            app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.label_cells')
+          )}
         </div>,
         9
-      )
-
+      );
 
       return items;
     }

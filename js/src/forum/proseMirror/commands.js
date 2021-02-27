@@ -1,132 +1,100 @@
 function tableNodes(schema) {
-    return [
-        schema.nodes.table,
-        schema.nodes.table_head,
-        schema.nodes.table_body,
-        schema.nodes.table_row,
-        schema.nodes.table_cell,
-        schema.nodes.table_header,
-    ];
+  return [
+    schema.nodes.table,
+    schema.nodes.table_head,
+    schema.nodes.table_body,
+    schema.nodes.table_row,
+    schema.nodes.table_cell,
+    schema.nodes.table_header,
+  ];
 }
 
 export function inTable(state) {
-    return tableNodes(state.schema).includes(state.selection.$head.parent.type);
+  return tableNodes(state.schema).includes(state.selection.$head.parent.type);
 }
 
 function inTableHead(state) {
-    return state.selection.$head.parent.type === state.schema.nodes.table_header;
+  return state.selection.$head.parent.type === state.schema.nodes.table_header;
 }
 
-export function moveSelectionAfterTableCommand(
-    state,
-    dispatch
-) {
-    return exitTableCommand(state, dispatch, false);
+export function moveSelectionAfterTableCommand(state, dispatch) {
+  return exitTableCommand(state, dispatch, false);
 }
 
-export function moveSelectionBeforeTableCommand(
-    state,
-    dispatch
-) {
-    return exitTableCommand(state, dispatch, true);
+export function moveSelectionBeforeTableCommand(state, dispatch) {
+  return exitTableCommand(state, dispatch, true);
 }
 
-function exitTableCommand(
-    state,
-    dispatch,
-    before = false
-) {
-    // TODO: Cleanup
-    const schema = state.schema;
+function exitTableCommand(state, dispatch, before = false) {
+  // TODO: Cleanup
+  const schema = state.schema;
 
-    if (!inTable(state)) {
-        return false;
+  if (!inTable(state)) {
+    return false;
+  }
+
+  if (dispatch) {
+    // our hierarchy is table > table_head | table_body > table_row > table_cell
+    // and we're relying on that to be always true.
+    // That's why .after(-3) selects the parent _table_ node from a table_cell node
+    const type = schema.nodes.paragraph;
+    const newPosition = before ? state.selection.$head.before(-3) - 1 : state.selection.$head.after(-3) + 1;
+    const tr = state.tr;
+
+    // if the position before/after the table doesn't exist, let's insert a paragraph there
+    try {
+      tr.doc.resolve(newPosition);
+    } catch (e) {
+      const insertionPosition = before ? newPosition + 1 : newPosition - 1;
+      tr.insert(insertionPosition, type.create());
     }
 
-    if (dispatch) {
-        // our hierarchy is table > table_head | table_body > table_row > table_cell
-        // and we're relying on that to be always true.
-        // That's why .after(-3) selects the parent _table_ node from a table_cell node
-        const type = schema.nodes.paragraph;
-        const newPosition = before
-            ? state.selection.$head.before(-3) - 1
-            : state.selection.$head.after(-3) + 1;
-        const tr = state.tr;
-
-        // if the position before/after the table doesn't exist, let's insert a paragraph there
-        try {
-            tr.doc.resolve(newPosition);
-        } catch (e) {
-            const insertionPosition = before
-                ? newPosition + 1
-                : newPosition - 1;
-            tr.insert(insertionPosition, type.create());
-        }
-
-        tr.setSelection(
-            require('@askvortsov-rich-text').Selection.near(tr.doc.resolve(Math.max(0, newPosition)), 1)
-        );
-        dispatch(tr.scrollIntoView());
-    }
-    return true;
+    tr.setSelection(require('@askvortsov-rich-text').Selection.near(tr.doc.resolve(Math.max(0, newPosition)), 1));
+    dispatch(tr.scrollIntoView());
+  }
+  return true;
 }
 
-export function insertTableRowBeforeCommand(
-    state,
-    dispatch
-) {
-    return insertTableRowCommand(true, state, dispatch);
+export function insertTableRowBeforeCommand(state, dispatch) {
+  return insertTableRowCommand(true, state, dispatch);
 }
 
-export function insertTableRowAfterCommand(
-    state,
-    dispatch
-) {
-    return insertTableRowCommand(false, state, dispatch);
+export function insertTableRowAfterCommand(state, dispatch) {
+  return insertTableRowCommand(false, state, dispatch);
 }
 
-function insertTableRowCommand(
-    before,
-    state,
-    dispatch
-) {
-    // TODO: Cleanup
-    const schema = state.schema;
+function insertTableRowCommand(before, state, dispatch) {
+  // TODO: Cleanup
+  const schema = state.schema;
 
-    if (!inTable(state) || inTableHead(state)) {
-        return false;
-    }
+  if (!inTable(state) || inTableHead(state)) {
+    return false;
+  }
 
-    if (dispatch) {
-        const { $head } = state.selection;
-        const tableRowNode = $head.node(-1);
+  if (dispatch) {
+    const { $head } = state.selection;
+    const tableRowNode = $head.node(-1);
 
-        const newTableCells = [];
-        tableRowNode.forEach((cell) => {
-            newTableCells.push(schema.nodes.table_cell.create(cell.attrs));
-        });
-        const newTableRow = schema.nodes.table_row.create(null, newTableCells);
-        const positionToInsert = before ? $head.before(-1) : $head.after(-1);
-        const tr = state.tr.insert(positionToInsert, newTableRow);
+    const newTableCells = [];
+    tableRowNode.forEach((cell) => {
+      newTableCells.push(schema.nodes.table_cell.create(cell.attrs));
+    });
+    const newTableRow = schema.nodes.table_row.create(null, newTableCells);
+    const positionToInsert = before ? $head.before(-1) : $head.after(-1);
+    const tr = state.tr.insert(positionToInsert, newTableRow);
 
-        dispatch(tr.scrollIntoView());
-    }
+    dispatch(tr.scrollIntoView());
+  }
 
-    return true;
+  return true;
 }
 
-export function insertTableColumnAfterCommand(
-    state,
-    dispatch
-) {
-    return insertTableColumnCommand(false, state, dispatch);
+export function insertTableColumnAfterCommand(state, dispatch) {
+  return insertTableColumnCommand(false, state, dispatch);
 }
 
-export function insertTableColumnBeforeCommand(
-    state,
-    dispatch
-) {
-    return insertTableColumnCommand(true, state, dispatch);
+export function insertTableColumnBeforeCommand(state, dispatch) {
+  return insertTableColumnCommand(true, state, dispatch);
 }
 
 /**
@@ -136,301 +104,250 @@ export function insertTableColumnBeforeCommand(
  * 3. for each table row, find the table cell at the desired index and get its position
  * 4. insert a new table_cell or table_header node before/after the found position
  */
-function insertTableColumnCommand(
-    before,
-    state,
-    dispatch
-) {
-    // TODO: Cleanup
-    const schema = state.schema;
+function insertTableColumnCommand(before, state, dispatch) {
+  // TODO: Cleanup
+  const schema = state.schema;
 
-    if (!inTable(state)) {
-        return false;
-    }
-    if (dispatch) {
-        const $head = state.selection.$head;
-        const selectedTable = $head.node(-3);
-        const selectedCellIndex = $head.index(-1);
-
-        // find and store all positions where we need to insert new cells
-        const newCells = [];
-        const tableOffset = $head.start(-3);
-        let targetCell;
-        // traverse the current table to find the absolute positions of our cells to be inserted
-        selectedTable.descendants((node, pos) => {
-            if (!tableNodes(schema).includes(node.type)) {
-                return false; // don't descend into non-table nodes
-            }
-
-            if (node.type === schema.nodes.table_row) {
-                targetCell = node.child(selectedCellIndex);
-            }
-
-            if (targetCell && node == targetCell) {
-                const position = before
-                    ? selectedTable.resolve(pos + 1).before()
-                    : selectedTable.resolve(pos + 1).after();
-                // position is relative to the start of the table, so we need
-                // to add the table offset (distance to start of document)
-                newCells.push([node.type, tableOffset + position]);
-            }
-        });
-
-        // insert new cells from bottom to top (reverse order)
-        // to avoid inserted cells making our found positions obsolete
-        let tr = state.tr;
-        for (const newCell of newCells.reverse()) {
-            tr = tr.insert(newCell[1], newCell[0].create());
-        }
-
-        dispatch(tr.scrollIntoView());
-    }
-    return true;
-}
-
-export function removeRowCommand(
-    state,
-    dispatch
-) {
-    if (!inTable(state) || inTableHead(state)) {
-        return false;
-    }
-
-    if (dispatch) {
-        const tr = state.tr;
-        const $head = state.selection.$head;
-
-        // delete entire table if we're deleting the last row in the table body
-        if ($head.node(-2).childCount === 1) {
-            return removeTableCommand(state, dispatch);
-        }
-        // delete from start to end of this row (node at -1 position from the table cell)
-        tr.delete($head.start(-1) - 1, $head.end(-1) + 1);
-        dispatch(tr.scrollIntoView());
-    }
-
-    return true;
-}
-
-export function removeColumnCommand(
-    state,
-    dispatch
-) {
-    // TODO: Cleanup
-    const schema = state.schema;
-
-    if (!inTable(state)) {
-        return false;
-    }
-
-    if (dispatch) {
-        const $head = state.selection.$head;
-        const table = $head.node(-3);
-
-        // remove entire table if this is the last remaining column
-        if ($head.node(-1).childCount === 1) {
-            return removeTableCommand(state, dispatch);
-        }
-
-        const cellIndex = $head.index(-1);
-        let targetCell;
-        const resolvedPositions = [];
-        const tableOffset = $head.start(-3);
-        table.descendants((node, pos) => {
-            if (!tableNodes(schema).includes(node.type)) {
-                return false; // don't descend into non-table nodes
-            }
-
-            if (node.type === schema.nodes.table_row) {
-                targetCell =
-                    node.childCount >= cellIndex + 1
-                        ? node.child(cellIndex)
-                        : null;
-            }
-
-            if (targetCell && node == targetCell) {
-                resolvedPositions.push(table.resolve(pos + 1));
-            }
-        });
-
-        let tr = state.tr;
-        for (const cellPosition of resolvedPositions.reverse()) {
-            tr = tr.delete(
-                tableOffset + cellPosition.start() - 1,
-                tableOffset + cellPosition.end() + 1
-            );
-        }
-
-        dispatch(tr.scrollIntoView());
-    }
-
-    return true;
-}
-
-export function removeTableContentCommand(
-    state,
-    dispatch
-) {
-    if (!inTable(state)) {
-        return false;
-    }
-
-    const { $from, $to } = state.selection;
-
-    // selection includes entire table
-    if ($from.start(-3) >= $from.pos - 3 && $from.end(-3) <= $to.pos + 3) {
-        return removeTableCommand(state, dispatch);
-    }
-
-    // selection includes entire row
-    if ($from.start(-1) >= $from.pos - 1 && $from.end(-1) <= $to.pos + 1) {
-        return removeRowCommand(state, dispatch);
-    }
-
-    // selection contains two arbitrary cells?
-    // prevent delete operation to prevent deleting the cell nodes
-    // themselves and breaking the table structure
-    if (!$from.sameParent($to)) {
-        return true;
-    }
-
+  if (!inTable(state)) {
     return false;
-}
+  }
+  if (dispatch) {
+    const $head = state.selection.$head;
+    const selectedTable = $head.node(-3);
+    const selectedCellIndex = $head.index(-1);
 
-function moveToCellCommand(
-    state,
-    dispatch,
-    direction
-) {
-    if (direction !== -1 && direction !== 1) {
-        return false;
+    // find and store all positions where we need to insert new cells
+    const newCells = [];
+    const tableOffset = $head.start(-3);
+    let targetCell;
+    // traverse the current table to find the absolute positions of our cells to be inserted
+    selectedTable.descendants((node, pos) => {
+      if (!tableNodes(schema).includes(node.type)) {
+        return false; // don't descend into non-table nodes
+      }
+
+      if (node.type === schema.nodes.table_row) {
+        targetCell = node.child(selectedCellIndex);
+      }
+
+      if (targetCell && node == targetCell) {
+        const position = before ? selectedTable.resolve(pos + 1).before() : selectedTable.resolve(pos + 1).after();
+        // position is relative to the start of the table, so we need
+        // to add the table offset (distance to start of document)
+        newCells.push([node.type, tableOffset + position]);
+      }
+    });
+
+    // insert new cells from bottom to top (reverse order)
+    // to avoid inserted cells making our found positions obsolete
+    let tr = state.tr;
+    for (const newCell of newCells.reverse()) {
+      tr = tr.insert(newCell[1], newCell[0].create());
     }
 
-    if (!inTable(state)) return false;
+    dispatch(tr.scrollIntoView());
+  }
+  return true;
+}
 
+export function removeRowCommand(state, dispatch) {
+  if (!inTable(state) || inTableHead(state)) {
+    return false;
+  }
+
+  if (dispatch) {
+    const tr = state.tr;
     const $head = state.selection.$head;
 
-    for (let level = -1; level > -4; level--) {
-        const parentIndex = $head.index(level);
-        const parent = $head.node(level);
-
-        if (!parent) continue;
-
-        // every time we want to skip the boundaries of a node (a cell, a row, ...)
-        // we have to consider the node's opening and closing positions, too. For
-        // each level, this will add an additional offset of 2 that we need to skip
-        const nodeOffset = 2;
-
-        const target = parent.maybeChild(parentIndex + direction);
-
-        if (!target) continue;
-
-        const newPos =
-            direction === -1
-                ? $head.start() - nodeOffset * (level * -1)
-                : $head.end() + nodeOffset * (level * -1);
-
-        dispatch(
-            state.tr
-                .setSelection(require('@askvortsov-rich-text').Selection.near(state.tr.doc.resolve(newPos), 1))
-                .scrollIntoView()
-        );
-
-        return true;
+    // delete entire table if we're deleting the last row in the table body
+    if ($head.node(-2).childCount === 1) {
+      return removeTableCommand(state, dispatch);
     }
+    // delete from start to end of this row (node at -1 position from the table cell)
+    tr.delete($head.start(-1) - 1, $head.end(-1) + 1);
+    dispatch(tr.scrollIntoView());
+  }
 
-    // we're at the end of the table and still want to move forward?
-    // let's move the cursor below the table!
-    if (direction === 1) {
-        return moveSelectionAfterTableCommand(state, dispatch);
-    } else {
-        return moveSelectionBeforeTableCommand(state, dispatch);
-    }
+  return true;
 }
 
-export function moveToPreviousCellCommand(
-    state,
-    dispatch
-) {
-    return moveToCellCommand(state, dispatch, -1);
-}
+export function removeColumnCommand(state, dispatch) {
+  // TODO: Cleanup
+  const schema = state.schema;
 
-export function moveToNextCellCommand(
-    state,
-    dispatch
-) {
-    return moveToCellCommand(state, dispatch, +1);
-}
+  if (!inTable(state)) {
+    return false;
+  }
 
-function removeTableCommand(
-    state,
-    dispatch
-) {
+  if (dispatch) {
     const $head = state.selection.$head;
-    if (dispatch) {
-        dispatch(state.tr.deleteRange($head.start(-3) - 1, $head.end(-3) + 1));
+    const table = $head.node(-3);
+
+    // remove entire table if this is the last remaining column
+    if ($head.node(-1).childCount === 1) {
+      return removeTableCommand(state, dispatch);
     }
+
+    const cellIndex = $head.index(-1);
+    let targetCell;
+    const resolvedPositions = [];
+    const tableOffset = $head.start(-3);
+    table.descendants((node, pos) => {
+      if (!tableNodes(schema).includes(node.type)) {
+        return false; // don't descend into non-table nodes
+      }
+
+      if (node.type === schema.nodes.table_row) {
+        targetCell = node.childCount >= cellIndex + 1 ? node.child(cellIndex) : null;
+      }
+
+      if (targetCell && node == targetCell) {
+        resolvedPositions.push(table.resolve(pos + 1));
+      }
+    });
+
+    let tr = state.tr;
+    for (const cellPosition of resolvedPositions.reverse()) {
+      tr = tr.delete(tableOffset + cellPosition.start() - 1, tableOffset + cellPosition.end() + 1);
+    }
+
+    dispatch(tr.scrollIntoView());
+  }
+
+  return true;
+}
+
+export function removeTableContentCommand(state, dispatch) {
+  if (!inTable(state)) {
+    return false;
+  }
+
+  const { $from, $to } = state.selection;
+
+  // selection includes entire table
+  if ($from.start(-3) >= $from.pos - 3 && $from.end(-3) <= $to.pos + 3) {
+    return removeTableCommand(state, dispatch);
+  }
+
+  // selection includes entire row
+  if ($from.start(-1) >= $from.pos - 1 && $from.end(-1) <= $to.pos + 1) {
+    return removeRowCommand(state, dispatch);
+  }
+
+  // selection contains two arbitrary cells?
+  // prevent delete operation to prevent deleting the cell nodes
+  // themselves and breaking the table structure
+  if (!$from.sameParent($to)) {
+    return true;
+  }
+
+  return false;
+}
+
+function moveToCellCommand(state, dispatch, direction) {
+  if (direction !== -1 && direction !== 1) {
+    return false;
+  }
+
+  if (!inTable(state)) return false;
+
+  const $head = state.selection.$head;
+
+  for (let level = -1; level > -4; level--) {
+    const parentIndex = $head.index(level);
+    const parent = $head.node(level);
+
+    if (!parent) continue;
+
+    // every time we want to skip the boundaries of a node (a cell, a row, ...)
+    // we have to consider the node's opening and closing positions, too. For
+    // each level, this will add an additional offset of 2 that we need to skip
+    const nodeOffset = 2;
+
+    const target = parent.maybeChild(parentIndex + direction);
+
+    if (!target) continue;
+
+    const newPos = direction === -1 ? $head.start() - nodeOffset * (level * -1) : $head.end() + nodeOffset * (level * -1);
+
+    dispatch(state.tr.setSelection(require('@askvortsov-rich-text').Selection.near(state.tr.doc.resolve(newPos), 1)).scrollIntoView());
 
     return true;
+  }
+
+  // we're at the end of the table and still want to move forward?
+  // let's move the cursor below the table!
+  if (direction === 1) {
+    return moveSelectionAfterTableCommand(state, dispatch);
+  } else {
+    return moveSelectionBeforeTableCommand(state, dispatch);
+  }
+}
+
+export function moveToPreviousCellCommand(state, dispatch) {
+  return moveToCellCommand(state, dispatch, -1);
+}
+
+export function moveToNextCellCommand(state, dispatch) {
+  return moveToCellCommand(state, dispatch, +1);
+}
+
+function removeTableCommand(state, dispatch) {
+  const $head = state.selection.$head;
+  if (dispatch) {
+    dispatch(state.tr.deleteRange($head.start(-3) - 1, $head.end(-3) + 1));
+  }
+
+  return true;
 }
 
 export function insertTableCommand(numRows = 4, numCols = 3, labelCells = true) {
-    return (state, dispatch) => {
-        // TODO: Clean this up
-        const schema = state.schema;
+  return (state, dispatch) => {
+    // TODO: Clean this up
+    const schema = state.schema;
 
-        // TODO: Reenable this
-        // if (!setBlockType(schema.nodes.table)(state)) {
-        //     return false;
-        // }
+    // TODO: Reenable this
+    // if (!setBlockType(schema.nodes.table)(state)) {
+    //     return false;
+    // }
 
-        if (!dispatch) return true;
+    if (!dispatch) return true;
 
-        let headerIndex = 1;
-        let cellIndex = 1;
-        const cell = () =>
-            schema.nodes.table_cell.create(
-                null,
-                schema.text(labelCells ? `cell ${cellIndex++}` : ' ')
-            );
-        const header = () =>
-            schema.nodes.table_header.create(
-                null,
-                schema.text(labelCells ?`header ${headerIndex++}`: ' ')
-            );
-        const row = (...cells) =>
-            schema.nodes.table_row.create(null, cells);
-        const head = (row) =>
-            schema.nodes.table_head.create(null, row);
-        const body = (...rows) =>
-            schema.nodes.table_body.create(null, rows);
-        const table = (head, body) =>
-            schema.nodes.table.createChecked(null, [head, body]);
-        const paragraph = () => schema.nodes.paragraph.create(null);
+    let headerIndex = 1;
+    let cellIndex = 1;
+    const cell = () => schema.nodes.table_cell.create(null, schema.text(labelCells ? `cell ${cellIndex++}` : ' '));
+    const header = () => schema.nodes.table_header.create(null, schema.text(labelCells ? `header ${headerIndex++}` : ' '));
+    const row = (...cells) => schema.nodes.table_row.create(null, cells);
+    const head = (row) => schema.nodes.table_head.create(null, row);
+    const body = (...rows) => schema.nodes.table_body.create(null, rows);
+    const table = (head, body) => schema.nodes.table.createChecked(null, [head, body]);
+    const paragraph = () => schema.nodes.paragraph.create(null);
 
-        // !MODIFIED
-        const t = table(
-            head(row(...Array(numCols).fill(0).map(header))),
-            body(
-                ...Array(numRows - 1).fill(0).map(_ => {
-                    return row(...Array(numCols).fill(0).map(cell))
-                })
-            )
-        );
-        // !MODIFIED
+    // !MODIFIED
+    const t = table(
+      head(row(...Array(numCols).fill(0).map(header))),
+      body(
+        ...Array(numRows - 1)
+          .fill(0)
+          .map((_) => {
+            return row(...Array(numCols).fill(0).map(cell));
+          })
+      )
+    );
+    // !MODIFIED
 
-        let tr = state.tr.replaceSelectionWith(t);
-        dispatch(tr.scrollIntoView());
+    let tr = state.tr.replaceSelectionWith(t);
+    dispatch(tr.scrollIntoView());
 
-        // if there's no selectable node after the inserted table, insert an empty paragraph
-        // because it makes selecting, navigating much more intuitive
-        const newState = state.apply(tr);
-        const nodeAfterTable = newState.doc.nodeAt(newState.tr.selection.to - 1);
-        if (nodeAfterTable && nodeAfterTable.type === schema.nodes.text) {
-            tr = newState.tr.insert(newState.tr.selection.to, paragraph());
-            dispatch(tr.scrollIntoView());
-        }
-
-        return true;
+    // if there's no selectable node after the inserted table, insert an empty paragraph
+    // because it makes selecting, navigating much more intuitive
+    const newState = state.apply(tr);
+    const nodeAfterTable = newState.doc.nodeAt(newState.tr.selection.to - 1);
+    if (nodeAfterTable && nodeAfterTable.type === schema.nodes.text) {
+      tr = newState.tr.insert(newState.tr.selection.to, paragraph());
+      dispatch(tr.scrollIntoView());
     }
+
+    return true;
+  };
 }
