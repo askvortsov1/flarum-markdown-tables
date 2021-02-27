@@ -1,5 +1,5 @@
 {
-  "name": "@askvortsov/pipetables",
+  "name": "@askvortsov/flarum-markdown-tables",
   "version": "0.0.0",
   "private": true,
   "dependencies": {

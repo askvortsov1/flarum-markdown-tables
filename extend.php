@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/pipetables.
+ * This file is part of askvortsov/flarum-markdown-tables.
  *
  * Copyright (c) 2019 
  * Extension by DogSports
@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Askvortsov\PipeTables;
+namespace Askvortsov\MarkdownTables;
 
 use Flarum\Extend;
 use s9e\TextFormatter\Configurator;
