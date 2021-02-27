@@ -1,6 +1,6 @@
 {
   "name": "askvortsov/flarum-markdown-tables",
-  "description": "Markdown tables.",
+  "description": "Markdown tables for flarum.",
   "keywords": [
     "flarum"
   ],
@@ -23,7 +23,7 @@
   "extra": {
     "flarum-extension": {
       "title": "Markdown Tables",
-      "categories": "formatting",
+      "category": "formatting",
       "icon": {
         "name": "fas fa-table",
         "backgroundColor": "#6932D1",
