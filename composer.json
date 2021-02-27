@@ -1,6 +1,6 @@
 {
-  "name": "askvortsov/pipetables",
-  "description": "Active markdown tables.",
+  "name": "askvortsov/flarum-markdown-tables",
+  "description": "Markdown tables.",
   "keywords": [
     "flarum"
   ],
@@ -22,9 +22,9 @@
   },
   "extra": {
     "flarum-extension": {
-      "title": "Markdown fas fa-table",
+      "title": "Markdown Tables",
       "icon": {
-        "name": "Tables",
+        "name": "fas fa-table",
         "backgroundColor": "#6932D1",
         "color": "#ffffff"
       }
