@@ -11,7 +11,7 @@
   },
   "authors": [
     {
-      "name": "Askvortsov",
+      "name": "Alexander Skvortsov",
       "role": "Developer"
     }
   ],
@@ -23,6 +23,7 @@
   "extra": {
     "flarum-extension": {
       "title": "Markdown Tables",
+      "categories": "formatting",
       "icon": {
         "name": "fas fa-table",
         "backgroundColor": "#6932D1",
