@@ -24,4 +24,4 @@ php flarum cache:clear
 ### Links
 
 - [Packagist](https://packagist.org/packages/askvortsov/flarum-markdown-tables)
-- [GitHub](https://github.com/oaklinq/flarum-ext-pipetables)
+- [GitHub](https://github.com/askvortsov1/flarum-markdown-tables)
