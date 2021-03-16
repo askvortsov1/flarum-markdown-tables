@@ -6,8 +6,13 @@
   ],
   "type": "flarum-extension",
   "license": "MIT",
+  "support": {
+    "issues": "https://github.com/askvortsov1/flarum-markdown-tables/issues",
+    "source": "https://github.com/askvortsov1/flarum-markdown-tables",
+    "forum": "https://discuss.flarum.org/d/26456-markdown-tables"
+  },
   "require": {
-    "flarum/core": "^0.1.0-beta.15"
+    "flarum/core": "^0.1.0-beta.16"
   },
   "authors": [
     {
@@ -23,7 +28,7 @@
   "extra": {
     "flarum-extension": {
       "title": "Markdown Tables",
-      "category": "formatting",
+      "category": "feature",
       "icon": {
         "name": "fas fa-table",
         "backgroundColor": "#6932D1",

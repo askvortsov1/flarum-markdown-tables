@@ -25,3 +25,4 @@ php flarum cache:clear
 
 - [Packagist](https://packagist.org/packages/askvortsov/flarum-markdown-tables)
 - [GitHub](https://github.com/askvortsov1/flarum-markdown-tables)
+- [Discuss](https://discuss.flarum.org/d/26456-markdown-tables)
