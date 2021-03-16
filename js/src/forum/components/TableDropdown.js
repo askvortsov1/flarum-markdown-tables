@@ -1,4 +1,5 @@
 import Button from 'flarum/common/components/Button';
+import Separator from 'flarum/common/components/Separator';
 import Switch from 'flarum/common/components/Switch';
 import listItems from 'flarum/common/helpers/listItems';
 import extractText from 'flarum/common/utils/extractText';
@@ -39,7 +40,15 @@ export default function TableDropdown() {
         return super.getMenu(items);
       }
 
-      const commands = [
+      const commandsToButtons = (commands) => {
+        return commands.map((command) => (
+          <Button onclick={this.click.bind(this, command.command)} onkeydown={this.keydown.bind(this, command.command)}>
+            {app.translator.trans(`askvortsov-pipetables.forum.composer.table_menu.${command.translation}`)}
+          </Button>
+        ));
+      };
+
+      const colCommands = [
         {
           translation: 'remove_column',
           command: removeColumnCommand,
@@ -52,6 +61,9 @@ export default function TableDropdown() {
           translation: 'insert_column_after',
           command: insertTableColumnAfterCommand,
         },
+      ];
+
+      const rowCommands = [
         {
           translation: 'remove_row',
           command: removeRowCommand,
@@ -68,13 +80,7 @@ export default function TableDropdown() {
 
       return (
         <ul className={'Dropdown-menu dropdown-menu TableDropdownMenu'}>
-          {listItems(
-            commands.map((command) => (
-              <Button onclick={this.click.bind(this, command.command)} onkeydown={this.keydown.bind(this, command.command)}>
-                {app.translator.trans(`askvortsov-pipetables.forum.composer.table_menu.${command.translation}`)}
-              </Button>
-            ))
-          )}
+          {listItems([...commandsToButtons(colCommands), Separator.component(), ...commandsToButtons(rowCommands)])}
         </ul>
       );
     }
@@ -157,6 +163,11 @@ export default function TableDropdown() {
         this.command = insertTableCommand(parseInt(this.numRows()), parseInt(this.numCols()), this.labelCells());
         this.state.run(this.attrs.type);
       }
+    }
+
+    onEditorUpdate() {
+      this.active = !!this.inTable();
+      this.$('.Dropdown-toggle').toggleClass('active', this.active);
     }
   }
 
