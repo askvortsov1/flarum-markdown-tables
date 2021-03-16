@@ -162,15 +162,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
 /* harmony import */ var flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! flarum/common/components/Button */ "flarum/common/components/Button");
 /* harmony import */ var flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var flarum_common_components_Switch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! flarum/common/components/Switch */ "flarum/common/components/Switch");
-/* harmony import */ var flarum_common_components_Switch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(flarum_common_components_Switch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! flarum/common/helpers/listItems */ "flarum/common/helpers/listItems");
-/* harmony import */ var flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! flarum/common/utils/extractText */ "flarum/common/utils/extractText");
-/* harmony import */ var flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! flarum/common/utils/Stream */ "flarum/common/utils/Stream");
-/* harmony import */ var flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../proseMirror/commands */ "./src/forum/proseMirror/commands.js");
+/* harmony import */ var flarum_common_components_Separator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! flarum/common/components/Separator */ "flarum/common/components/Separator");
+/* harmony import */ var flarum_common_components_Separator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(flarum_common_components_Separator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var flarum_common_components_Switch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! flarum/common/components/Switch */ "flarum/common/components/Switch");
+/* harmony import */ var flarum_common_components_Switch__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(flarum_common_components_Switch__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! flarum/common/helpers/listItems */ "flarum/common/helpers/listItems");
+/* harmony import */ var flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! flarum/common/utils/extractText */ "flarum/common/utils/extractText");
+/* harmony import */ var flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! flarum/common/utils/Stream */ "flarum/common/utils/Stream");
+/* harmony import */ var flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../proseMirror/commands */ "./src/forum/proseMirror/commands.js");
+
 
 
 
@@ -201,9 +204,9 @@ function TableDropdown() {
       this.state.addItem(this.attrs.type, function (state, dispatch) {
         return _this.command(state, dispatch);
       }, this.onEditorUpdate.bind(this));
-      this.numCols = flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_5___default()(3);
-      this.numRows = flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_5___default()(4);
-      this.labelCells = flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_5___default()(true);
+      this.numCols = flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_6___default()(3);
+      this.numRows = flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_6___default()(4);
+      this.labelCells = flarum_common_utils_Stream__WEBPACK_IMPORTED_MODULE_6___default()(true);
     };
 
     _proto.getMenu = function getMenu(items) {
@@ -213,33 +216,38 @@ function TableDropdown() {
         return _FormDropdown.prototype.getMenu.call(this, items);
       }
 
-      var commands = [{
+      var commandsToButtons = function commandsToButtons(commands) {
+        return commands.map(function (command) {
+          return m(flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_1___default.a, {
+            onclick: _this2.click.bind(_this2, command.command),
+            onkeydown: _this2.keydown.bind(_this2, command.command)
+          }, app.translator.trans("askvortsov-pipetables.forum.composer.table_menu." + command.translation));
+        });
+      };
+
+      var colCommands = [{
         translation: 'remove_column',
-        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__["removeColumnCommand"]
+        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__["removeColumnCommand"]
       }, {
         translation: 'insert_column_before',
-        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__["insertTableColumnBeforeCommand"]
+        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__["insertTableColumnBeforeCommand"]
       }, {
         translation: 'insert_column_after',
-        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__["insertTableColumnAfterCommand"]
-      }, {
+        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__["insertTableColumnAfterCommand"]
+      }];
+      var rowCommands = [{
         translation: 'remove_row',
-        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__["removeRowCommand"]
+        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__["removeRowCommand"]
       }, {
         translation: 'insert_row_before',
-        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__["insertTableRowBeforeCommand"]
+        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__["insertTableRowBeforeCommand"]
       }, {
         translation: 'insert_row_after',
-        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__["insertTableRowAfterCommand"]
+        command: _proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__["insertTableRowAfterCommand"]
       }];
       return m("ul", {
         className: 'Dropdown-menu dropdown-menu TableDropdownMenu'
-      }, flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_3___default()(commands.map(function (command) {
-        return m(flarum_common_components_Button__WEBPACK_IMPORTED_MODULE_1___default.a, {
-          onclick: _this2.click.bind(_this2, command.command),
-          onkeydown: _this2.keydown.bind(_this2, command.command)
-        }, app.translator.trans("askvortsov-pipetables.forum.composer.table_menu." + command.translation));
-      })));
+      }, flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_4___default()([].concat(commandsToButtons(colCommands), [flarum_common_components_Separator__WEBPACK_IMPORTED_MODULE_2___default.a.component()], commandsToButtons(rowCommands))));
     };
 
     _proto.fields = function fields() {
@@ -251,7 +259,7 @@ function TableDropdown() {
         className: "FormControl",
         name: "numCols",
         type: "number",
-        placeholder: flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_4___default()(app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_cols')),
+        placeholder: flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_5___default()(app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_cols')),
         bidi: this.numCols,
         required: true
       })), 10);
@@ -261,13 +269,13 @@ function TableDropdown() {
         className: "FormControl",
         name: "numRows",
         type: "number",
-        placeholder: flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_4___default()(app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_rows')),
+        placeholder: flarum_common_utils_extractText__WEBPACK_IMPORTED_MODULE_5___default()(app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_rows')),
         bidi: this.numRows,
         required: true
       })), 10);
       items.add('labelCells', m("div", {
         className: "Form-group"
-      }, flarum_common_components_Switch__WEBPACK_IMPORTED_MODULE_2___default.a.component({
+      }, flarum_common_components_Switch__WEBPACK_IMPORTED_MODULE_3___default.a.component({
         state: this.labelCells(),
         onchange: this.labelCells
       }, app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.label_cells'))), 9);
@@ -275,7 +283,7 @@ function TableDropdown() {
     };
 
     _proto.inTable = function inTable() {
-      return Object(_proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__["inTable"])(this.attrs.state.editorView.state);
+      return Object(_proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__["inTable"])(this.attrs.state.editorView.state);
     };
 
     _proto.onEditorUpdate = function onEditorUpdate() {
@@ -296,9 +304,14 @@ function TableDropdown() {
 
     _proto.insert = function insert() {
       if (!this.inTable()) {
-        this.command = Object(_proseMirror_commands__WEBPACK_IMPORTED_MODULE_6__["insertTableCommand"])(parseInt(this.numRows()), parseInt(this.numCols()), this.labelCells());
+        this.command = Object(_proseMirror_commands__WEBPACK_IMPORTED_MODULE_7__["insertTableCommand"])(parseInt(this.numRows()), parseInt(this.numCols()), this.labelCells());
         this.state.run(this.attrs.type);
       }
+    };
+
+    _proto.onEditorUpdate = function onEditorUpdate() {
+      this.active = !!this.inTable();
+      this.$('.Dropdown-toggle').toggleClass('active', this.active);
     };
 
     return TableDropdown;
@@ -1177,6 +1190,17 @@ module.exports = flarum.core.compat['app'];
 /***/ (function(module, exports) {
 
 module.exports = flarum.core.compat['common/components/Button'];
+
+/***/ }),
+
+/***/ "flarum/common/components/Separator":
+/*!********************************************************************!*\
+  !*** external "flarum.core.compat['common/components/Separator']" ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = flarum.core.compat['common/components/Separator'];
 
 /***/ }),
 
