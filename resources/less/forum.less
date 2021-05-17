@@ -12,6 +12,7 @@
 .Post-body table {
     width: 98%;
     margin: 1%;
+    overflow-x: auto;
 }
 .Post-body td, .Post-body th {
     padding: 4px;
@@ -34,34 +35,34 @@
     background-color: fade(@primary-color, 30%);
 }
 
-@media @phone {
-    .Post-body table, .Post-body thead, .Post-body tbody, .Post-body th, .Post-body td, .Post-body tr { 
-        display: block; 
-    }
-    .Post-body thead tr { 
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-    .Post-body tr {
-        border: 1px solid @body-bg;
-    }
-    .Post-body td {
-        border: none;
-        border-bottom: 1px solid @body-bg;
-        position: relative;
-        padding-left: 50%;
-        text-align: left !important;
-    }
-    .Post-body td:before {
-        position: absolute;
-        top: 6px;
-        left: 6px;
-        width: 45%; 
-        padding-right: 10px; 
-        white-space: nowrap;
-        content: attr(data-label);
-        color: @primary-color;
-        font-weight: bold;
-    }
-}
+// @media @phone {
+//     .Post-body table, .Post-body thead, .Post-body tbody, .Post-body th, .Post-body td, .Post-body tr { 
+//         display: block; 
+//     }
+//     .Post-body thead tr { 
+//         position: absolute;
+//         top: -9999px;
+//         left: -9999px;
+//     }
+//     .Post-body tr {
+//         border: 1px solid @body-bg;
+//     }
+//     .Post-body td {
+//         border: none;
+//         border-bottom: 1px solid @body-bg;
+//         position: relative;
+//         padding-left: 50%;
+//         text-align: left !important;
+//     }
+//     .Post-body td:before {
+//         position: absolute;
+//         top: 6px;
+//         left: 6px;
+//         width: 45%; 
+//         padding-right: 10px; 
+//         white-space: nowrap;
+//         content: attr(data-label);
+//         color: @primary-color;
+//         font-weight: bold;
+//     }
+// }
