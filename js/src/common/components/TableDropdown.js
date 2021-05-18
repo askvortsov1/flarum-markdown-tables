@@ -43,7 +43,7 @@ export default function TableDropdown() {
       const commandsToButtons = (commands) => {
         return commands.map((command) => (
           <Button onclick={this.click.bind(this, command.command)} onkeydown={this.keydown.bind(this, command.command)}>
-            {app.translator.trans(`askvortsov-pipetables.forum.composer.table_menu.${command.translation}`)}
+            {app.translator.trans(`askvortsov-markdown-tables.forum.composer.table_menu.${command.translation}`)}
           </Button>
         ));
       };
@@ -91,12 +91,12 @@ export default function TableDropdown() {
       items.add(
         'numCols',
         <div className="Form-group">
-          <label>{app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_cols')}</label>
+          <label>{app.translator.trans('askvortsov-markdown-tables.forum.composer.table_menu.num_cols')}</label>
           <input
             className="FormControl"
             name="numCols"
             type="number"
-            placeholder={extractText(app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_cols'))}
+            placeholder={extractText(app.translator.trans('askvortsov-markdown-tables.forum.composer.table_menu.num_cols'))}
             bidi={this.numCols}
             required
           />
@@ -107,12 +107,12 @@ export default function TableDropdown() {
       items.add(
         'numRows',
         <div className="Form-group">
-          <label>{app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_rows')}</label>
+          <label>{app.translator.trans('askvortsov-markdown-tables.forum.composer.table_menu.num_rows')}</label>
           <input
             className="FormControl"
             name="numRows"
             type="number"
-            placeholder={extractText(app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.num_rows'))}
+            placeholder={extractText(app.translator.trans('askvortsov-markdown-tables.forum.composer.table_menu.num_rows'))}
             bidi={this.numRows}
             required
           />
@@ -129,7 +129,7 @@ export default function TableDropdown() {
               state: this.labelCells(),
               onchange: this.labelCells,
             },
-            app.translator.trans('askvortsov-pipetables.forum.composer.table_menu.label_cells')
+            app.translator.trans('askvortsov-markdown-tables.forum.composer.table_menu.label_cells')
           )}
         </div>,
         9

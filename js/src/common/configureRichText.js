@@ -23,7 +23,7 @@ export default function configureRichText() {
       TableDropdownComponent.component({
         type: 'table',
         icon: 'fas fa-table',
-        tooltip: app.translator.trans('askvortsov-pipetables.forum.composer.table_tooltip'),
+        tooltip: app.translator.trans('askvortsov-markdown-tables.forum.composer.table_tooltip'),
         state: this.attrs.state,
       }),
       10
