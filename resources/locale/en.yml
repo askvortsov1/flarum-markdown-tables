@@ -1,5 +1,5 @@
 askvortsov-markdown-tables:
-  forum:
+  lib:
     composer:
       table_menu:
         num_cols: "# Columns"
