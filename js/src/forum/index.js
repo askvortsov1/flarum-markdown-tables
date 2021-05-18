@@ -1,7 +1,7 @@
 import app from 'flarum/app';
 import { extend } from 'flarum/extend';
 import Post from 'flarum/components/Post';
-import configureRichText from './configureRichText';
+import configureRichText from '../common/configureRichText';
 
 app.initializers.add('askvortsov-pipetables', () => {
   extend(Post.prototype, 'oncreate', function () {
@@ -22,7 +22,5 @@ app.initializers.add('askvortsov-pipetables', () => {
     }
   });
 
-  if ('askvortsov-rich-text' in flarum.extensions) {
-    configureRichText();
-  }
+  configureRichText();
 });
